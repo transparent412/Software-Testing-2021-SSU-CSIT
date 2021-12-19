@@ -36,12 +36,10 @@ public class TestAsos {
 
         WebElement element = (new WebDriverWait(driver, Duration.ofSeconds(20))).until(ExpectedConditions
                 .presenceOfElementLocated(
-                        By.xpath("//button[@class='src-GlobalBanner-Content-Content_content src-GlobalBanner-Content-Content_contentCenter']")));
+                        By.xpath("//*[contains(@class,'src-GlobalBanner-Unit-Unit_unitLink src-GlobalBanner-Unit-Unit_unitRight')]")));
         actions.moveToElement(element).perform();
-        Assert.assertEquals("*Введи промокод HEYYOU на странице оплаты заказа, чтобы получить скидку. " +
-                "Акция заканчивается в 09:00 МСК 24.01.2022. Промокод можно использовать только при первом заказе. " +
-                "Промокод не может быть использован совместно с другими предложениями и кодами, а также для покупки подарочных сертификатов, для оплаты доставки и для покупок на ASOS Marketplace. " +
-                "Действует только на заказы с доставкой в Россию, Казахстан и Кыргызстан. Некоторые отмеченные товары не участвуют в акции.", driver.findElement(By.xpath("//*[@id='globalBannerComponent']/div/div/div/div")).getText());
+        Assert.assertEquals("Заканчивается в 11:00 МСК 20.12.2021. Акция действует, пока товар есть в наличии. Распространяется на вещи, помеченные на сайте."
+                , driver.findElement(By.xpath("//*[contains(@class,'src-GlobalBanner-Tooltip-Tooltip_wrapperRight') and not(contains(@class,'src-GlobalBanner-Tooltip-Tooltip_hidden'))]/..//*[@class='src-GlobalBanner-Tooltip-Tooltip_tooltip']")).getText());
     }
 
     @Test
@@ -52,13 +50,17 @@ public class TestAsos {
         driver.findElement(By.xpath("//a[@class='mu__cta']/span[text()='МУЖСКОЕ']")).click();
         driver.findElement(By.xpath("//a[@data-analytics-id='ru-mwgblexcau-winteraccessories-mulink']")).click();
 
-        driver.findElement(By.xpath("//li[@data-dropdown-id='attribute_1047']/div/button/div[text()='Тип продукта']")).click();
-        driver.findElement(By.xpath("//li[@class='_3LB03xF']/div/label/div[text()='Перчатки']")).click();
+        driver.findElement(By.xpath("//div[text()='Тип продукта']")).click();
+        driver.findElement(By.xpath("//div[text()='Перчатки']")).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@data-auto-id,'productListSpinner')]")));
 
         driver.findElement(By.xpath("//li[@data-auto-id='sort']")).click();
         driver.findElement(By.xpath("//li[@id='plp_web_sort_price_low_to_high']")).click();
 
-        List<WebElement> list = driver.findElements(By.xpath("//section[@class='_3YREj-P']/article/a/p/span/span"));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@data-auto-id,'productListSpinner')]")));
+
+        List<WebElement> list = driver.findElements(By.xpath("//*[@data-auto-id='productTilePrice']/../span[last()]"));
 
         List<String> list2 = list.stream().map(WebElement::getText).collect(Collectors.toList());
         list2 = list2.stream().map(s -> s.substring(0, s.indexOf(","))).collect(Collectors.toList());
